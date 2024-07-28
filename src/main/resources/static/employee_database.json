@@ -50,7 +50,11 @@
         "position" : "Developer III",
         "department" : "Engineering"
       }
-    ]
+    ],
+    "compensation" : {
+      "salary" : 80000.00,
+      "effectiveDate" : "2024-08-05"
+    }
   },
   {
     "employeeId" : "b7839309-3348-463b-a7e3-5de1c168beb3",

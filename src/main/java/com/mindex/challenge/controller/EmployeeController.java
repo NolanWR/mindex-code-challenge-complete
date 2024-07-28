@@ -1,5 +1,6 @@
 package com.mindex.challenge.controller;
 
+import com.mindex.challenge.data.Compensation;
 import com.mindex.challenge.data.Employee;
 import com.mindex.challenge.data.ReportingStructure;
 import com.mindex.challenge.service.EmployeeService;
@@ -41,10 +42,19 @@ public class EmployeeController {
         employee.setEmployeeId(id);
         return employeeService.update(employee);
     }
+
     @GetMapping("/employee/numberOfReports/{id}")
     public ReportingStructure findNumberOfReports(@PathVariable String id) {
         LOG.debug("Received employee numberOfReports request for id [{}]", id);
 
         return employeeService.findNumberOfReports(employeeService.read(id));
+    }
+
+    //kind of unnecessary for this first design, since its part of the Employee structure
+    @GetMapping("/employee/compensation/{id}")
+    public Compensation findCompensation(@PathVariable String id) {
+        LOG.debug("Received employee find compensation request for id [{}]", id);
+
+        return employeeService.read(id).getCompensation();
     }
 }
