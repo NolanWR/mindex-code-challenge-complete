@@ -41,6 +41,7 @@ public class EmployeeController {
         employee.setEmployeeId(id);
         return employeeService.update(employee);
     }
+
     @GetMapping("/employee/numberOfReports/{id}")
     public ReportingStructure findNumberOfReports(@PathVariable String id) {
         LOG.debug("Received employee numberOfReports request for id [{}]", id);
