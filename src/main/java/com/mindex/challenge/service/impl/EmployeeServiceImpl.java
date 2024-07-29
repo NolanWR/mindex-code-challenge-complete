@@ -1,6 +1,8 @@
 package com.mindex.challenge.service.impl;
 
+import com.mindex.challenge.dao.CompensationRepository;
 import com.mindex.challenge.dao.EmployeeRepository;
+import com.mindex.challenge.data.Compensation;
 import com.mindex.challenge.data.Employee;
 import com.mindex.challenge.data.ReportingStructure;
 import com.mindex.challenge.service.EmployeeService;
@@ -19,6 +21,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private CompensationRepository compensationRepository;
 
     @Override
     public Employee create(Employee employee) {
@@ -85,5 +90,33 @@ public class EmployeeServiceImpl implements EmployeeService {
                 calcNumberOfReports(employees.get(i).getDirectReports());
             }
         }
+    }
+
+    //Since splitting everything Compensation off into its own files didn't work, I've kept them in the same locations as the Employee stuff
+    //Optimally, they'd be relocated elsewhere, or compensation would be a field of Employee
+    @Override
+    public Compensation createCompensation(Compensation compensation) {
+        LOG.debug("Creating compensation [{}]", compensation);
+
+        if(compensation.getEmployeeId() == null){
+            throw new RuntimeException("employeeId cannot be null");
+        }
+
+        compensationRepository.insert(compensation);
+
+        return compensation;
+    }
+
+    @Override
+    public Compensation readCompensation(String id) {
+        LOG.debug("Creating compensation with employee id [{}]", id);
+
+        Compensation compensation = compensationRepository.findByEmployeeId(id);
+
+        if (compensation == null) {
+            throw new RuntimeException("Invalid employeeId: " + id);
+        }
+
+        return compensation;
     }
 }
