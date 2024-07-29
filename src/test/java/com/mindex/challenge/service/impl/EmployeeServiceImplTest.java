@@ -1,5 +1,6 @@
 package com.mindex.challenge.service.impl;
 
+import com.mindex.challenge.data.Compensation;
 import com.mindex.challenge.data.Employee;
 import com.mindex.challenge.service.EmployeeService;
 import org.junit.Before;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -24,6 +27,8 @@ public class EmployeeServiceImplTest {
 
     private String employeeUrl;
     private String employeeIdUrl;
+    private String compensationUrl;
+    private String compensationIdUrl;
 
     @Autowired
     private EmployeeService employeeService;
@@ -38,6 +43,8 @@ public class EmployeeServiceImplTest {
     public void setup() {
         employeeUrl = "http://localhost:" + port + "/employee";
         employeeIdUrl = "http://localhost:" + port + "/employee/{id}";
+        compensationUrl = "http://localhost:" + port + "/compensation";
+        compensationIdUrl = "http://localhost:" + port + "/compensation/{id}";
     }
 
     @Test
@@ -77,10 +84,33 @@ public class EmployeeServiceImplTest {
         assertEmployeeEquivalence(readEmployee, updatedEmployee);
     }
 
+    @Test
+    public void testCompensationCreateReadUpdate() {
+        Compensation testCompensation = new Compensation();
+        testCompensation.setEmployeeId("16a596ae-edd3-4847-99fe-c4518e82c86f");
+        testCompensation.setSalary(80000.01);
+        testCompensation.setEffectiveDate(LocalDate.parse("2024-08-12"));
+
+        // Create checks
+        Compensation createdCompensation = restTemplate.postForEntity(compensationUrl, testCompensation, Compensation.class).getBody();
+
+        assertCompensationEquivalence(testCompensation, createdCompensation);
+
+        // Read checks
+        Compensation readCompensation = restTemplate.getForEntity(compensationIdUrl, Compensation.class, createdCompensation.getEmployeeId()).getBody();
+        assertCompensationEquivalence(createdCompensation, readCompensation);
+    }
+
     private static void assertEmployeeEquivalence(Employee expected, Employee actual) {
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getLastName(), actual.getLastName());
         assertEquals(expected.getDepartment(), actual.getDepartment());
         assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
+    private static void assertCompensationEquivalence(Compensation expected, Compensation actual) {
+        assertEquals(expected.getEmployeeId(), actual.getEmployeeId());
+        assertEquals(expected.getSalary(), actual.getSalary(), .01);
+        assertEquals(expected.getEffectiveDate(), actual.getEffectiveDate());
     }
 }

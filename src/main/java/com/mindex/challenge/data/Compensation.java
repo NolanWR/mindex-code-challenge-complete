@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Compensation {
     private String employeeId;
-    private float salary;
+    private double salary;
     private LocalDate effectiveDate;
 
     public Compensation() {
@@ -18,11 +18,12 @@ public class Compensation {
         this.employeeId = employeeId;
     }
 
-    public float getSalary() {
+    //Should be a double instead of a float, double works better for salaries
+    public double getSalary() {
         return salary;
     }
 
-    public void setSalary(float salary) {
+    public void setSalary(double salary) {
         this.salary = salary;
     }
 
